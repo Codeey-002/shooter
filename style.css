@@ -1,0 +1,13 @@
+#gamecontainer {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    /* background-image: url("images/star.png");
+    background-repeat: no-repeat; */
+
+    background-color: rgb(33, 5, 193);
+}
