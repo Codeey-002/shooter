@@ -11,3 +11,7 @@ body {
 
     background-color: rgb(33, 5, 193);
 }
+
+*{
+    transition: 500ms;
+}
