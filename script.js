@@ -1,5 +1,7 @@
 const screenWidth = window.innerWidth;
 const screenHeight = window.innerHeight;
+const bulletlist = [];
+const aliens = [];
 
 let objectX = screenWidth / 2;
   let objectY = screenHeight - 100;
@@ -129,20 +131,49 @@ function rocket() {
 
 rocket();
 
+function checkcollision(bulletdata)
+{
+  for(let i =0; i < aliens.length; i++)
+  {
+    const alien = aliens[i];
+    const hit = bulletdata.y < alien.y + alien.height && bulletdata.y + bulletdata.height > alien.y && bulletdata.x < alien.x + alien.width &&bulletdata.x + bulletdata.width > alien.x;
+    if (hit)
+    {
+      alien.el.remove();
+      bulletdata.el.remove();
+      aliens.splice(i,1);
+      bulletlist.splice(bulletlist.indexOf(bulletdata), 1);
+      return true;
+    }
+  }
+  return false;
+}
+
+
+
   function bullets(){
-const bullet = show_image("images/bullet-8468.png",13,40,"bullet",objectX+42,objectY-15,"absolute");
-let bulletY = objectY-15;
-const mySound = new Audio('images/meow.mp3');
+ const bullet = show_image("images/mochi.png", 40, 40, "bullet", objectX + 42, objectY - 15, "absolute");
+  const bulletData = { el: bullet, x: objectX + 42, y: objectY - 15, height: 40, width: 40 };
+  bulletlist.push(bulletData);
+  let bulletY = objectY-15;
+ const mySound = new Audio('images/meow.mp3');
   mySound.play();
  function moveBullet()
   {
-    bulletY -= 60; 
-    bullet.style.top = `${bulletY}px`;
+    bulletY -= 2; 
+     bullet.style.top = `${bulletY}px`;
+
+    const bulletdata = bulletlist.find(b => b.el === bullet);
+    if (!bulletdata) return;
+    bulletdata.y = bulletY;
+     if(checkcollision(bulletdata)) return;
+
 
      if (bulletY > -2000) {
       requestAnimationFrame(moveBullet);
     } else {
       bullet.remove(); 
+      bulletlist.splice(bulletlist.indexOf(bulletData), 1);
     }
     
   }
@@ -162,3 +193,42 @@ window.addEventListener("keydown", (event) => {
    bullets()
  }
 });
+
+function alien() {
+  let tries = 0;
+  let placed = false;
+
+  while (!placed && tries < 20) {
+    let randomWidth = getRandomInt(0, screenWidth-70);
+    let randomHeight = getRandomInt(0, 375);
+
+    
+    let overlapping = stars.some(star => {
+      let dx = star.x - randomWidth;
+      let dy = star.y - randomHeight;
+      let distance = Math.sqrt(dx * dx + dy * dy);
+      return distance < minSpacing;
+    });
+
+    if (!overlapping) {
+      let alienImg = show_image("images/alien.png", 60, 60, "alien", randomWidth, randomHeight);
+       const newAlien = { el: alienImg, x: randomWidth, y: randomHeight, height: 60, width: 60 };
+      aliens.push(newAlien); // ✅ now stored correctly
+      placed = true;
+      
+      stars.push({ x: randomWidth, y: randomHeight });
+      placed = true;
+
+       
+    }
+
+    tries++;
+  }
+
+ 
+}
+
+for (let index = 0; index < 30; index++) {
+  alien();
+}
+

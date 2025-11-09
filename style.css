@@ -9,9 +9,9 @@ body {
     /* background-image: url("images/star.png");
     background-repeat: no-repeat; */
 
-    background-color: rgb(33, 5, 193);
+    background-color: rgb(2, 1, 11);
 }
 
 *{
-    transition: 500ms;
+    transition: 20ms;
 }
